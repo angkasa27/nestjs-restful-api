@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { PrismaService } from '../common/prisma.service';
@@ -5,6 +6,7 @@ import { ValidationService } from '../common/validation.service';
 import {
   LoginUserRequest,
   RegisterUserRequest,
+  UpdateUserRequest,
   UserResponse,
 } from '../model/user.model';
 import { Logger } from 'winston';
@@ -22,9 +24,8 @@ export class UserService {
   ) {}
 
   async register(request: RegisterUserRequest): Promise<UserResponse> {
-    this.logger.info(`Register new user ${JSON.stringify(request)}`);
+    this.logger.debug(`Register new user ${JSON.stringify(request)}`);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const registerRequest: RegisterUserRequest =
       this.validationService.validate(UserValidation.REGISTER, request);
 
@@ -54,10 +55,9 @@ export class UserService {
   }
 
   async login(request: LoginUserRequest): Promise<UserResponse> {
-    this.logger.info(`UserService.login(${JSON.stringify(request)})`);
+    this.logger.debug(`UserService.login(${JSON.stringify(request)})`);
     console.log(request);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const loginRequest: LoginUserRequest = this.validationService.validate(
       UserValidation.LOGIN,
       request,
@@ -102,6 +102,60 @@ export class UserService {
     return {
       username: user.username,
       name: user.name,
+    };
+  }
+
+  async update(user: User, request: UpdateUserRequest): Promise<UserResponse> {
+    this.logger.debug(
+      `UserService.update(${user.username}, ${JSON.stringify(request)} )`,
+    );
+
+    const updateRequest = this.validationService.validate(
+      UserValidation.UPDATE,
+      request,
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (updateRequest.name) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      user.name = updateRequest.name;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (updateRequest.password) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      user.password = await bcryptjs.hash(updateRequest.password, 10);
+    }
+
+    const result = await this.prismaService.user.update({
+      where: {
+        username: user.username,
+      },
+      data: {
+        name: user.name,
+        password: user.password,
+      },
+    });
+
+    return {
+      name: result.name,
+      username: result.username,
+    };
+  }
+
+  async logout(user: User): Promise<UserResponse> {
+    const result = await this.prismaService.user.update({
+      where: {
+        username: user.username,
+      },
+      data: {
+        token: null,
+      },
+    });
+
+    return {
+      username: result.username,
+      name: result.name,
     };
   }
 }
