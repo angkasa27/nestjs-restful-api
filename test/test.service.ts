@@ -7,6 +7,7 @@ export class TestService {
   constructor(private prismaService: PrismaService) {}
 
   async deleteUser() {
+    // await this.deleteContact();
     await this.prismaService.user.deleteMany({
       where: {
         username: 'test',
@@ -29,6 +30,14 @@ export class TestService {
         name: 'Test',
         password: await bcryptjs.hash('test1234', 10),
         token: 'test-token',
+      },
+    });
+  }
+
+  async deleteContact() {
+    await this.prismaService.contact.deleteMany({
+      where: {
+        username: 'test',
       },
     });
   }

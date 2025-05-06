@@ -26,12 +26,15 @@ describe('UserController', () => {
 
     logger = app.get(WINSTON_MODULE_PROVIDER);
     testService = app.get(TestService);
+
+    await testService.deleteContact();
   });
 
   describe('POST /api/users', () => {
     beforeEach(async () => {
       await testService.deleteUser();
     });
+
     it('should be rejected if request is invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/users')
