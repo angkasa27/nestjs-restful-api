@@ -11,6 +11,8 @@ import { Logger } from 'winston';
 import { UserValidation } from './user.validation';
 import * as bcryptjs from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
+import { User } from 'generated/prisma';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -93,6 +95,13 @@ export class UserService {
       username: user.username,
       name: user.name,
       token: user.token,
+    };
+  }
+
+  get(user: User): UserResponse {
+    return {
+      username: user.username,
+      name: user.name,
     };
   }
 }

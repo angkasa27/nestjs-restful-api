@@ -20,6 +20,7 @@ export class TestService {
         username: 'test',
         name: 'Test',
         password: await bcryptjs.hash('test1234', 10),
+        token: 'test-token',
       },
     });
   }
