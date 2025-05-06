@@ -18,8 +18,8 @@ export class TestService {
     await this.prismaService.user.create({
       data: {
         username: 'test',
-        name: 'test',
-        password: await bcryptjs.hash('test', 10),
+        name: 'Test',
+        password: await bcryptjs.hash('test1234', 10),
       },
     });
   }
