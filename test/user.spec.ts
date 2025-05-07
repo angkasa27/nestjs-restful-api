@@ -28,6 +28,7 @@ describe('UserController', () => {
     testService = app.get(TestService);
 
     await testService.deleteContact();
+    await testService.deleteUser();
   });
 
   describe('POST /api/users', () => {
