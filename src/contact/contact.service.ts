@@ -13,7 +13,7 @@ import {
 } from '../model/contact.model';
 import { ContactValidation } from './contact.validation';
 import { Logger } from 'winston';
-import { WebResponse } from 'src/model/web.model';
+import { WebResponse } from '../model/web.model';
 
 @Injectable()
 export class ContactService {

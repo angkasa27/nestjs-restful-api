@@ -10,7 +10,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { TestService } from './test.service';
 import { TestModule } from './test.module';
 
-describe('UserController', () => {
+describe('ContactController', () => {
   let app: INestApplication<App>;
   let logger: Logger;
   let testService: TestService;
