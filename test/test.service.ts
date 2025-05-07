@@ -83,10 +83,10 @@ export class TestService {
     await this.prismaService.address.create({
       data: {
         contact_id: contact.id,
-        street: 'jalan test',
-        city: 'kota test',
-        province: 'provinsi test',
-        country: 'negara test',
+        street: 'test',
+        city: 'test',
+        province: 'test',
+        country: 'test',
         postal_code: '1111',
       },
     });
