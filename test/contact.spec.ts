@@ -26,17 +26,18 @@ describe('UserController', () => {
 
     logger = app.get(WINSTON_MODULE_PROVIDER);
     testService = app.get(TestService);
+
+    await testService.deleteAll();
+  });
+
+  afterEach(async () => {
+    await testService.deleteAll();
   });
 
   describe('POST /api/contacts', () => {
     beforeEach(async () => {
-      await testService.deleteUser();
+      await testService.deleteAll();
       await testService.createUser();
-    });
-
-    afterEach(async () => {
-      await testService.deleteContact();
-      await testService.deleteUser();
     });
 
     it('should be rejected if request is invalid', async () => {
@@ -80,14 +81,9 @@ describe('UserController', () => {
 
   describe('GET /api/contacts/:contactId', () => {
     beforeEach(async () => {
-      await testService.deleteUser();
+      await testService.deleteAll();
       await testService.createUser();
       await testService.createContact();
-    });
-
-    afterEach(async () => {
-      await testService.deleteContact();
-      await testService.deleteUser();
     });
 
     it('should be rejected if contact is not found', async () => {
@@ -121,15 +117,9 @@ describe('UserController', () => {
 
   describe('PUT /api/contacts/:contactId', () => {
     beforeEach(async () => {
-      await testService.deleteUser();
-
+      await testService.deleteAll();
       await testService.createUser();
       await testService.createContact();
-    });
-
-    afterEach(async () => {
-      await testService.deleteContact();
-      await testService.deleteUser();
     });
 
     it('should be rejected if request is invalid', async () => {
