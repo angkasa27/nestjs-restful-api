@@ -201,7 +201,7 @@ describe('ContactController', () => {
     });
 
     it('should be able to remove contact', async () => {
-      const contact = await testService.getContact();
+      let contact = await testService.getContact();
       const response = await request(app.getHttpServer())
         .delete(`/api/contacts/${contact.id}`)
         .set('Authorization', 'test-token');
@@ -210,6 +210,9 @@ describe('ContactController', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.data).toBe(true);
+
+      contact = await testService.getContact();
+      expect(contact).toBeNull();
     });
   });
 
