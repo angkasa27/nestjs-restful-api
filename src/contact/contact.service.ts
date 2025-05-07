@@ -63,6 +63,7 @@ export class ContactService {
     });
 
     if (!contact) {
+      console.log('Contact not found');
       throw new HttpException('Contact not found', 404);
     }
     return contact;
@@ -97,5 +98,18 @@ export class ContactService {
     });
 
     return this.toContactResponse(contact);
+  }
+
+  async remove(user: User, contactId: number): Promise<ContactResponse> {
+    const contact = await this.checkContactMustExist(user.username, contactId);
+
+    const result = await this.prismaService.contact.delete({
+      where: {
+        id: contact.id,
+        username: user.username,
+      },
+    });
+
+    return this.toContactResponse(result);
   }
 }
